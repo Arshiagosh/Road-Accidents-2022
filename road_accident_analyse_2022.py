@@ -1,9 +1,20 @@
 # %% [markdown]
-# #### Importing Libraries
+# # Road Accidents 2022
+# - By **Arshia Goshtasbi**
+# - Github: [@Arshiagosh](https://github.com/Arshiagosh)
+# 
+# **Description:**
+# 
+# This comprehensive dataset provides detailed information on road accidents reported over multiple years. The dataset encompasses various attributes related to accident status, vehicle and casualty references, demographics, and severity of casualties. It includes essential factors such as pedestrian details, casualty types, road maintenance worker involvement, and the Index of Multiple Deprivation (IMD) decile for casualties' home areThis dataset provides valuable insights for analyzing road accidents, identifying trends, and implementing safety measures to reduce casualties and enhance road safety. Researchers, policymakers, and analysts can leverage this dataset for evidence-based decision-making and improving overall road transportation systems.road transportation systems.
+
+# %% [markdown]
+# ## Analyse
+
+# %% [markdown]
+# ### Importing Libraries
 
 # %%
 # Importing necessary libraries
-import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -11,11 +22,10 @@ import matplotlib.pyplot as plt
 # Importing Libraries for Visualization
 import folium
 from geopy.geocoders import Nominatim
-from collections import Counter
 
 
 # %% [markdown]
-# #### Data Loading and Preprocessing
+# ### Data Loading and Preprocessing
 # 
 # - **Purpose:** Load the dataset and perform initial preprocessing steps such as removing duplicates and irrelevant columns.
 # 
@@ -31,20 +41,43 @@ df = pd.read_csv('statistics.csv')
 
 # Data Preprocessing
 df.drop_duplicates(inplace=True)
-df.drop(inplace=True, columns=['status','vehicle_reference','casualty_reference','accident_index', 'accident_year','accident_reference'])
+df.drop(inplace=True, columns=['status', 'vehicle_reference',
+                               'casualty_reference', 'accident_index',
+                               'accident_year', 'accident_reference'])
 df = df[~df.isin([-1]).any(axis=1)]
 
 # Display dataset info
 df.info()
 
 # %% [markdown]
-# #### Data Dictionary
-# 
-# - **Purpose:** Define dictionaries to map numeric codes to their corresponding categorical values for better interpretation of the dataset.
-# 
-# - **Actions:**
-#     - Created dictionaries to map various codes in the dataset to their meanings.
-# 
+# #### Columns:
+# ***Status***: The status of the accident (e.g., reported, under investigation).\
+# ***Accident_Index***: A unique identifier for each reported accident.\
+# ***Accident_Year***: The year in which the accident occurred.\
+# ***Accident_Reference***: A reference number associated with the accident.\
+# ***Vehicle_Reference***: A reference number for the involved vehicle in the accident.\
+# ***Casualty_Reference***: A reference number for the casualty involved in the accident.\
+# ***Casualty_Class***: Indicates the class of the casualty (e.g., driver, passenger, pedestrian).\
+# ***Sex_of_Casualty***: The gender of the casualty (male or female).\
+# ***Age_of_Casualty***: The age of the casualty.\
+# ***Age_Band_of_Casualty***: Age group to which the casualty belongs (e.g., 0-5, 6-10, 11-15).\
+# ***Casualty_Severity***: The severity of the casualty's injuries (e.g., fatal, serious, slight).\
+# ***Pedestrian_Location***: The location of the pedestrian at the time of the accident.\
+# ***Pedestrian_Movement***: The movement of the pedestrian during the accident.\
+# ***Car_Passenger***: Indicates whether the casualty was a car passenger at the time of the accident (yes or no).\
+# ***Bus_or_Coach_Passenger***: Indicates whether the casualty was a bus or coach passenger (yes or no).\
+# ***Pedestrian_Road_Maintenance_Worker***: Indicates whether the casualty was a road maintenance worker (yes or no).\
+# ***Casualty_Type***: The type of casualty (e.g., driver/rider, passenger, pedestrian).\
+# ***Casualty_Home_Area_Type***: The type of area in which the casualty resides (e.g., urban, rural).\
+# ***Casualty_IMD_Decile***: The IMD decile of the area where the casualty resides (a measure of deprivation).\
+# ***LSOA_of_Casualty***: The Lower Layer Super Output Area (LSOA) associated with the casualty's location.
+
+# %% [markdown]
+# ### Data Dictionary
+# This information is given in the ***data_guide.xlsx*** file.
+# -  **Purpose:** Define dictionaries to map numeric codes to their corresponding categorical values for better interpretation of the dataset.
+# -  **Actions:**
+# - Created dictionaries to map various codes in the dataset to their meanings.
 
 # %%
 casualty_class = {
@@ -168,7 +201,7 @@ casualty_imd_decile = {
                     '-1': 'Data missing or out of range'}
 
 # %% [markdown]
-# #### Correlation Analysis
+# ### Correlation Analysis
 # 
 # - **Purpose:** Investigate the correlation between different features in the dataset.
 # 
@@ -188,7 +221,7 @@ plt.title('Correlation Heatmap of Features (Excluding "lsoa_of_casualty")')
 plt.show()
 
 # %% [markdown]
-# #### Casualty Class and Severity Analysis
+# ### Casualty Class and Severity Analysis
 # 
 # - **Purpose:** Explore the distribution of casualties based on casualty class and severity.
 # 
@@ -227,7 +260,7 @@ plt.tight_layout()
 plt.show()
 
 # %% [markdown]
-# #### Gender Distribution Analysis
+# ### Gender Distribution Analysis
 # 
 # - **Purpose:** Investigate the distribution of casualties based on gender.
 # 
@@ -249,7 +282,7 @@ plt.show()
 
 
 # %% [markdown]
-# #### Gender-Based Casualty Class Analysis
+# ### Gender-Based Casualty Class Analysis
 # 
 # - **Purpose:** Compare the distribution of casualty classes between males and females.
 # 
@@ -289,7 +322,7 @@ plt.show()
 
 
 # %% [markdown]
-# #### Age Band and Severity Analysis
+# ### Age Band and Severity Analysis
 # 
 # - **Purpose:** Examine the severity of casualties across different age bands.
 # 
@@ -330,7 +363,7 @@ plt.show()
 
 
 # %% [markdown]
-# #### Pedestrian Movement and Severity Analysis
+# ### Pedestrian Movement and Severity Analysis
 # 
 # - **Purpose:** Investigate the distribution of casualties based on pedestrian movement and severity.
 # 
@@ -362,12 +395,11 @@ for bar in ax.patches:
     ax.annotate(f'{int(height)}', (x + width/2, y + 50), ha='center', va='center', fontsize=8, color='black')
 
 plt.legend(title='Severity', bbox_to_anchor=(1.05, 1), loc='upper left')
-plt.tight_layout()
 plt.show()
 
 
 # %% [markdown]
-# # Passenger Distribution Analysis
+# ### Passenger Distribution Analysis
 # 
 # - **Purpose:** Determine the proportion of casualties who were passengers in cars or buses/coaches.
 # 
@@ -396,7 +428,7 @@ plt.show()
 
 
 # %% [markdown]
-# #### Home Area Distribution Analysis
+# ### Home Area Distribution Analysis
 # 
 # - **Purpose:** Examine the distribution of casualties based on home area type.
 # 
@@ -417,7 +449,7 @@ plt.show()
 
 
 # %% [markdown]
-# #### Vehicle Type Distribution Analysis
+# ### Vehicle Type Distribution Analysis
 # 
 # - **Purpose:** Explore the distribution of casualties by the type of vehicle involved.
 # 
@@ -440,7 +472,7 @@ plt.show()
 
 
 # %% [markdown]
-# #### IMD Decile and Casualty Severity Analysis
+# ### IMD Decile and Casualty Severity Analysis
 # 
 # - **Purpose:** Investigate the distribution of casualty severity across different IMD (Index of Multiple Deprivation) deciles.
 # 
@@ -465,7 +497,7 @@ plt.show()
 
 
 # %% [markdown]
-# #### Pedestrian Location and Movement Analysis
+# ### Pedestrian Location and Movement Analysis
 # 
 # - **Purpose:** Examine the distribution of pedestrian location and movement during accidents.
 # 
@@ -494,7 +526,7 @@ plt.show()
 
 
 # %% [markdown]
-# #### LOSA Analysis
+# ### LOSA and Casualty Class Analysis
 # 
 # - **Purpose:** Analyze the distribution of casualties across different Lower Layer Super Output Areas (LOSA) by casualty class.
 # 
@@ -522,7 +554,7 @@ plt.xticks(rotation=45, ha='right')
 plt.show()
 
 # %% [markdown]
-# #### Total Casualties by LOSA
+# ### Total Casualties by LOSA
 # 
 # - **Purpose:** Calculate the total number of casualties for each Lower Layer Super Output Area (LOSA).
 # 
@@ -547,7 +579,7 @@ grouped_data
 
 
 # %% [markdown]
-# #### Map Visualization
+# ### Map Visualization
 # 
 # - **Purpose:** Visualize the distribution of casualties across different locations using a map.
 # 
@@ -558,7 +590,6 @@ grouped_data
 # 
 
 # %%
-
 # Function to get latitude and longitude for a town using OpenStreetMap Nominatim API
 def get_coordinates(town):
     geolocator = Nominatim(user_agent="my_geocoder")
@@ -568,9 +599,9 @@ def get_coordinates(town):
     else:
         print(f"Failed to get coordinates for {town}")
 
-df = grouped_data
+df_map = grouped_data
 # Apply the function to each town in the DataFrame to get coordinates
-df['Latitude'], df['Longitude'] = zip(*df['Names'].apply(get_coordinates))
+df_map['Latitude'], df_map['Longitude'] = zip(*df_map['Names'].apply(get_coordinates))
 
 # Create a folium map
 m = folium.Map(location=[51.5074, -0.1278], zoom_start=9)
@@ -579,7 +610,7 @@ m = folium.Map(location=[51.5074, -0.1278], zoom_start=9)
 colors = ['blue', 'green', 'red', 'purple', 'orange', 'darkred', 'lightred', 'beige', 'darkblue', 
           'darkgreen', 'cadetblue', 'darkpurple', 'pink', 'lightblue', 'lightgreen', 'gray', 'black']
 # Add markers for each town with popup showing the town name and count
-for _, row in df.iterrows():
+for _, row in df_map.iterrows():
     town = row['Names']
     frequency = row['Counts']
     color_index = min(frequency // 30, len(colors) - 1)  # Use the color index based on frequency, capped at the length of colors list
@@ -590,8 +621,174 @@ for _, row in df.iterrows():
 m.save("map.html")  # Save the map as an HTML file
 m
 
+# %% [markdown]
+# ## Machine Learning and Modeling
+
+# %% [markdown]
+# ## Data Preparation
 
 # %%
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
+df.drop(inplace=True, columns=['lsoa_of_casualty'])
+X = df.drop(columns=['casualty_severity'])
+y = df['casualty_severity']
+
+# Split data into train and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Data scaling
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# %% [markdown]
+# ## Principal Component Analysis (PCA)
+# **Components Counts:** 10
+# ### Purpose:
+# Principal Component Analysis (PCA) is a dimensionality reduction technique used to transform high-dimensional data into a lower-dimensional space while preserving the maximum amount of variance. Its primary purpose is to simplify the dataset by identifying the most important features and reducing redundancy, which can help improve model performance and interpretability.
+# 
+# ### Action:
+# 1. Standardize the features by scaling them to have a mean of 0 and a standard deviation of 1 to ensure that all features contribute equally to the analysis.
+# 2. Compute the covariance matrix of the standardized features, which represents the pairwise relationships between features.
+# 3. Perform eigendecomposition on the covariance matrix to obtain the eigenvectors and eigenvalues.
+# 4. Sort the eigenvectors by their corresponding eigenvalues in descending order to prioritize the principal components that capture the most variance.
+# 5. Select the top k eigenvectors (principal components) that explain the majority of the variance in the data, where k is the desired dimensionality of the reduced space.
+# 6. Project the original data onto the selected principal components to obtain the lower-dimensional representation of the dataset.
+# 7. Optionally, assess the cumulative explained variance ratio to determine how much information is retained in the reduced space compared to the original dataset.
+
+# %%
+from sklearn.decomposition import PCA
+# Perform PCA
+pca = PCA(n_components=10)
+X_train_pca = pca.fit_transform(X_train_scaled)
+X_test_pca = pca.transform(X_test_scaled)
+
+# %% [markdown]
+# ### Random Forest Classifier
+# 
+# #### Purpose:
+# Random Forest is an ensemble learning method that combines multiple decision trees to create a robust and accurate model for classification tasks. Its primary purpose is to improve prediction accuracy and handle complex datasets by aggregating the predictions of multiple individual decision trees.
+# 
+# #### Action:
+# 1. Train multiple decision trees independently on random subsets of the training data (bootstrap samples).
+# 2. Randomly select a subset of features at each node of the decision trees to introduce diversity and reduce overfitting.
+# 3. Grow each decision tree to its maximum depth or until a minimum number of samples per leaf node is reached.
+# 4. Aggregate the predictions of all decision trees by either averaging the class probabilities (for classification) or taking the majority vote (for classification).
+# 5. The final prediction is based on the aggregated results, resulting in a more robust and accurate classification model.
+# 
+
+# %%
+from sklearn.ensemble import RandomForestClassifier
+
+# Random Forest
+param_grid_rf = {
+    'n_estimators': [100, 200, 300],
+    'max_depth': [10, 20, 30, None],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4],
+    'bootstrap': [True, False]
+}
+
+rf_grid = GridSearchCV(RandomForestClassifier(random_state=42), param_grid_rf, cv=5, verbose=1, n_jobs=-1)
+rf_grid.fit(X_train_pca, y_train)
+
+best_rf = rf_grid.best_estimator_
+y_pred_rf = best_rf.predict(X_test_pca)
+accuracy_rf = accuracy_score(y_test, y_pred_rf)
+print("Random Forest Accuracy:", accuracy_rf)
+
+print("Random Forest Best Parameters:")
+print(rf_grid.best_params_)
+
+print("Random Forest Classification Report:")
+print(classification_report(y_test, y_pred_rf))
+
+print("Random Forest Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred_rf))
+
+
+# %% [markdown]
+# ### Logistic Regression
+# 
+# #### Purpose:
+# Logistic Regression is a statistical method used for binary classification tasks, where the target variable has two possible outcomes. Its primary purpose is to model the probability of a binary outcome based on one or more predictor variables. Despite its name, logistic regression is a linear model that applies a logistic function to the linear combination of input features.
+# 
+# #### Action:
+# 1. Calculate the log odds of the probability of the positive outcome using a linear combination of the input features and their corresponding coefficients.
+# 2. Apply the logistic (sigmoid) function to the log odds to obtain the predicted probabilities of the positive outcome.
+# 3. Use a threshold (usually 0.5) to classify instances into one of the two classes based on the predicted probabilities.
+# 4. Estimate the coefficients of the logistic regression model using maximum likelihood estimation or other optimization techniques.
+# 5. Regularize the model to prevent overfitting by adding penalty terms to the cost function, such as L1 or L2 regularization.
+# 
+
+# %%
+from sklearn.linear_model import LogisticRegression
+
+# Logistic Regression
+param_grid_lr = {
+    'C': [0.001, 0.01, 0.1, 1, 10, 100],
+    'penalty': ['l1', 'l2']
+}
+
+lr_grid = GridSearchCV(LogisticRegression(solver='liblinear', random_state=42), param_grid_lr, cv=5, verbose=1, n_jobs=-1)
+lr_grid.fit(X_train_pca, y_train)
+
+best_lr = lr_grid.best_estimator_
+y_pred_lr = best_lr.predict(X_test_pca)
+accuracy_lr = accuracy_score(y_test, y_pred_lr)
+print("Logistic Regression Accuracy:", accuracy_lr)
+
+print("Logistic Regression Best Parameters:")
+print(lr_grid.best_params_)
+
+print("Logistic Regression Classification Report:")
+print(classification_report(y_test, y_pred_lr))
+
+print("Logistic Regression Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred_lr))
+
+
+# %% [markdown]
+# ### Support Vector Machine (SVM)
+# 
+# #### Purpose:
+# Support Vector Machine is a supervised learning algorithm used for both classification and regression tasks. Its primary purpose in classification is to find the hyperplane that best separates the classes in the feature space while maximizing the margin between the classes. SVM is effective in handling high-dimensional data and is robust to overfitting.
+# 
+# #### Action:
+# 1. Find the optimal hyperplane that separates the classes by maximizing the margin between the support vectors (instances closest to the decision boundary).
+# 2. Transform the input features into a higher-dimensional space using the kernel trick, if necessary, to make the classes separable.
+# 3. Classify new instances based on which side of the hyperplane they fall on in the transformed feature space.
+# 4. Handle non-linearly separable data by using different types of kernel functions (e.g., linear, polynomial, radial basis function) to map the data into a higher-dimensional space where linear separation is possible.
+# 5. Tune hyperparameters such as the regularization parameter (C) and the kernel parameters to optimize the performance of the SVM model.
+
+# %%
+from sklearn.svm import SVC
+
+# SVM
+param_grid_svm = {
+    'C': [0.1, 1, 10, 100],
+    'gamma': [1, 0.1, 0.01, 0.001],
+    'kernel': ['rbf', 'linear']
+}
+
+svm_grid = GridSearchCV(SVC(random_state=42), param_grid_svm, cv=5, verbose=1, n_jobs=-1)
+svm_grid.fit(X_train_pca, y_train)
+
+best_svm = svm_grid.best_estimator_
+y_pred_svm = best_svm.predict(X_test_pca)
+accuracy_svm = accuracy_score(y_test, y_pred_svm)
+print("SVM Accuracy:", accuracy_svm)
+
+print("SVM Best Parameters:")
+print(svm_grid.best_params_)
+
+print("SVM Classification Report:")
+print(classification_report(y_test, y_pred_svm))
+
+print("SVM Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred_svm))
 
 
